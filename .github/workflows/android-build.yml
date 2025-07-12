@@ -6,11 +6,10 @@ on:
 
 jobs:
   build:
-    name: Build APK
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout Repo
+      - name: Checkout code
         uses: actions/checkout@v4
 
       - name: Set up JDK 17
@@ -19,18 +18,22 @@ jobs:
           distribution: 'temurin'
           java-version: '17'
 
-      - name: Install Node.js
+      - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
           node-version: '18'
 
-      - name: Install Dependencies
+      - name: Install dependencies
         run: |
           npm install
           npm install -g @capacitor/cli
 
       - name: Copy Web Files
         run: npx cap copy android
+
+      - name: Make Gradle Executable
+        working-directory: android
+        run: chmod +x gradlew
 
       - name: Build APK
         working-directory: android
